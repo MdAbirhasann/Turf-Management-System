@@ -1,0 +1,6 @@
+<?php
+$pageTitle='Print/PDF Export';require_once 'includes_admin_header.php';
+$bookings=$pdo->query("SELECT b.*,s.name service_name,p.method,p.transaction_id FROM bookings b JOIN services s ON s.id=b.service_id LEFT JOIN payments p ON p.id=b.payment_id ORDER BY b.booking_date DESC,b.start_time DESC")->fetchAll();
+?>
+<div class="panel"><div class="print-head"><h1>TS Sports Arena - Booking Report</h1><p>Generated: <?= date('d M Y, h:i A') ?></p></div><button class="btn" data-print>Print / Save as PDF</button><p>Use the browser print dialog and select “Save as PDF”.</p><table><thead><tr><th>Invoice</th><th>Customer</th><th>Service</th><th>Date</th><th>Time</th><th>Payment</th><th>Amount</th><th>Status</th></tr></thead><tbody><?php foreach($bookings as $b): ?><tr><td><?= e($b['invoice_number']) ?></td><td><?= e($b['customer_name']) ?><br><?= e($b['phone']) ?></td><td><?= e($b['service_name']) ?></td><td><?= e($b['booking_date']) ?></td><td><?= e(date('h:i A',strtotime($b['start_time']))) ?> - <?= e(date('h:i A',strtotime($b['end_time']))) ?></td><td><?= e($b['method']) ?><br><?= e($b['transaction_id']) ?></td><td><?= money($b['total_amount']) ?></td><td><?= e($b['status']) ?></td></tr><?php endforeach; ?></tbody></table></div>
+<?php require_once 'includes_admin_footer.php'; ?>
